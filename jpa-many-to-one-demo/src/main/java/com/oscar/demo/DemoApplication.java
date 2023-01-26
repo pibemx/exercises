@@ -4,6 +4,8 @@ import com.oscar.demo.entities.Example;
 import com.oscar.demo.entities.ExampleDetail;
 import com.oscar.demo.repository.ExampleRepository;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -22,7 +24,7 @@ public class DemoApplication {
 	@Bean
 	public CommandLineRunner demo(ExampleRepository repository) {
 		return (args) -> {
-			Example exampleA = new Example();
+			Example example = new Example();
 
 			ExampleDetail detailA = new ExampleDetail();
 			detailA.setData("detail-data-a");
@@ -30,12 +32,28 @@ public class DemoApplication {
 			ExampleDetail detailB = new ExampleDetail();
 			detailB.setData("detail-data-b");
 
-			exampleA.setData("data-1");
-			exampleA.setExampleDetailList(List.of(detailA, detailB));
+			example.setData("data-1");
+			example.setExampleDetailList(List.of(detailA, detailB));
 
-			repository.save(exampleA);
+			repository.save(example);
 
-			repository.findAll().forEach(System.out::println);
+			repository.findAll().forEach(ex -> {
+				if (ex.getExampleDetailList().size() == 2) {
+					log.info("Correct number of details");
+				} else {
+					log.error("Different number of details than expected");
+				}
+
+				Set<String> dataSet = ex.getExampleDetailList().stream()
+						.map(ExampleDetail::getData)
+						.collect(Collectors.toSet());
+
+				if (dataSet.equals(Set.of("detail-data-a", "detail-data-b"))) {
+					log.info("Data in details is correct");
+				} else {
+					log.error("Error in detail data");
+				}
+			});
 
 		};
 	}
