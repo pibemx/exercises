@@ -24,16 +24,13 @@ public class DemoApplication {
 	@Bean
 	public CommandLineRunner demo(ExampleRepository repository) {
 		return (args) -> {
-			Example example = new Example();
-
 			ExampleDetail detailA = new ExampleDetail();
 			detailA.setData("detail-data-a");
 
 			ExampleDetail detailB = new ExampleDetail();
 			detailB.setData("detail-data-b");
 
-			example.setData("data-1");
-			example.setExampleDetailList(List.of(detailA, detailB));
+			Example example = new Example("data-1", List.of(detailA, detailB));
 
 			repository.save(example);
 

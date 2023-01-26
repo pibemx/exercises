@@ -9,9 +9,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.List;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Example {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -23,9 +25,5 @@ public class Example {
     public Example(String data, List<ExampleDetail> exampleDetailList) {
         this.exampleDetailList = exampleDetailList;
         this.data = data;
-    }
-
-    public Example() {
-
     }
 }
